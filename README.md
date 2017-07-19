@@ -38,7 +38,7 @@ When you run this code you should get a phone call. On answering the call, you s
 `https://persephony.com/testApp/voice` contains a small Persephony application that also uses the Persephony Java SDK. When a request is made to its `/voice` endpoint, it will respond with the PerCL script
 
 ```json
-[{"Say": {"text: "Thanks for using Persephony!"}}]
+[{"Say": {"text": "Thanks for using Persephony!"}}]
 ```
 
 which produces the message you heard. You can test this yourself by making a HTTP POST request to the application to see the PerCL response.
