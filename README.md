@@ -36,7 +36,7 @@ public class Example {
 
 When you run this code you should get a phone call. On answering the call, you should hear a short message ("Thanks for using Persephony!"). This indicates that you've successfully setup your SDK.
 
-`https://persephony.com/testApp/voice` contains a small Persephony application that also uses the Persephony Java SDK. When a request is made to its `/voice` endpoint, it will respond with the following PerCL script, which produces the message you heard.
+`https://www.persephony.com/testApp/voice` contains a small Persephony application that also uses the Persephony Java SDK. When a request is made to its `/voice` endpoint, it will respond with the following PerCL script, which produces the message you heard.
 
 ```json
 [{"Say": {"text": "Thanks for using Persephony!"}}]
