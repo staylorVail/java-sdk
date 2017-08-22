@@ -33,7 +33,7 @@ import com.vailsys.persephony.KnownSizeInputStream;
  */
 public class APIRequester {
 	/** The URL of the Persephony API */
-	protected static String PERSY_URL = "https://spv07vcs15.vail/apiserver";
+	protected static String PERSY_URL = "https://www.persephony.com/apiserver";
 
 	/** 
 	 * Type object representing the HashMap<String,String> used by

@@ -29,7 +29,7 @@ public class APIRequesterTest {
 	@Given("^an accountId of (AC[0-9A-Fa-f]{40}) and an authToken of ([0-9A-Fa-f]{40}) to make a default APIRequester$")
 	public void makeADefaultAPIRequester(String accountId, String authToken) throws Throwable {
 		this.req = new APIRequester(accountId, authToken);
-		assertThat(APIRequester.PERSY_URL, is("https://spv07vcs15.vail/apiserver"));
+		assertThat(APIRequester.PERSY_URL, is("https://www.persephony.com/apiserver"));
 	}
 
 	@Given("^an accountId of (AC[0-9A-Fa-f]{40}) and an authToken of ([0-9A-Fa-f]{40}) to make a test APIRequester$")
