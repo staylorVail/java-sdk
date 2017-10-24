@@ -2,7 +2,11 @@ package com.vailsys.persephony.api.call;
 
 import static com.vailsys.persephony.json.PersyGson.gson;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+
+import java.util.Map;
 
 /**
  * Represents the fields needed to create a new call on Persephony.
@@ -18,9 +22,7 @@ class CreateCallRequest {
 	public String callConnectUrl;
 	public String statusCallbackUrl;
 
-	public String sendDigits;
-	public IfMachine ifMachine;
-	public Integer timeout;
+	public CallOptions options;
 
 	/**
 	 * Setup a new call creation payload using an applicationId.
@@ -31,7 +33,7 @@ class CreateCallRequest {
 	 * purchase from Persephony or a verified phone number owned by the user.
 	 * @param applicationId The {@code applicationId} for the registered
 	 * Persephony application which should handle this call.
-	 * @param callOptions Optional arguments that can be provided when creating
+	 * @param options Optional arguments that can be provided when creating
 	 * a call. See Persephony documentation for details.
 	 */
 	public CreateCallRequest(String to, String from, String applicationId, CallOptions options) {
@@ -52,7 +54,7 @@ class CreateCallRequest {
 	 * @param statusCallbackUrl The URL to which Persephony will report call
 	 * status notifications. See the {@code statusCallbackUrl} in the
 	 * Persephony Application documentation.
-	 * @param callOptions Optional arguments that can be provided when creating
+	 * @param options Optional arguments that can be provided when creating
 	 * a call. See Persephony documentation for details.
 	 */
 	public CreateCallRequest(String to, String from, String callConnectUrl, String statusCallbackUrl, CallOptions options) {
@@ -77,7 +79,7 @@ class CreateCallRequest {
 	 * @param statusCallbackUrl The URL to which Persephony will report call
 	 * status notifications. See the {@code statusCallbackUrl} in the
 	 * Persephony Application documentation.
-	 * @param callOptions Optional arguments that can be provided when creating
+	 * @param options Optional arguments that can be provided when creating
 	 * a call. See Persephony documentation for details.
 	 */
 	private CreateCallRequest(String to, String from, String callConnectUrl, String statusCallbackUrl, String applicationId, CallOptions options) {
@@ -88,12 +90,7 @@ class CreateCallRequest {
 
 		this.callConnectUrl = callConnectUrl;
 		this.statusCallbackUrl = statusCallbackUrl;
-
-		if(options != null) {
-			this.sendDigits = options.getSendDigits();
-			this.ifMachine = options.getIfMachine();
-			this.timeout = options.getTimeout();
-		}
+		this.options = options;
 	}
 
 	/**
@@ -102,6 +99,15 @@ class CreateCallRequest {
 	 * @return JSON representation of this object.
 	 */
 	public String toJson() throws JsonIOException {
-		return gson.toJson(this);
+		JsonElement el = gson.toJsonTree(this);
+		JsonObject obj = el.getAsJsonObject();
+		if(obj.has("options")){
+			JsonObject options = obj.getAsJsonObject("options");
+			obj.remove("options");
+			for( Map.Entry<String, JsonElement> entry: options.entrySet()) {
+				obj.add(entry.getKey(), entry.getValue());
+			}
+		}
+		return obj.toString();
 	}
 }

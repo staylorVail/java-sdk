@@ -2,6 +2,7 @@ package com.vailsys.persephony.api.queue.member;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import org.mockserver.model.JsonBody;
 import world.Helper;
 
 import static org.junit.Assert.assertThat;
@@ -89,6 +90,20 @@ public class MembersRequesterTest {
         assertTrue(m.equals(orig));
     }
 
+    @Then("^dequeue a member by callId with requestId (.*)$")
+    public void dequeueMemberByCallId(String requestId) throws Throwable {
+        String callId = "CAb933917ae0d3547bd65da77a4aa50e0329850401";
+        Helper.getMockServer().when(
+                request().withMethod("POST").withPath(this.memR.getPath() + "/" + callId).withBody(new JsonBody("{requestId:'" + requestId +"'}"))
+        ).respond(
+                response().withStatusCode(200).withBody(MembersRequesterTest.testMember)
+        );
+
+        Member m = this.memR.dequeue(callId, requestId);
+        Member orig = Member.fromJson(MembersRequesterTest.testMember);
+        assertTrue(m.equals(orig));
+    }
+
     @Then("^dequeue a member by Front$")
     public void dequeueMemberByFront() throws Throwable {
         Helper.getMockServer().when(
@@ -98,6 +113,19 @@ public class MembersRequesterTest {
         );
 
         Member m = this.memR.dequeueFront();
+        Member orig = Member.fromJson(MembersRequesterTest.testMember);
+        assertTrue(m.equals(orig));
+    }
+
+    @Then("^dequeue a member by Front with requestId (.*)$")
+    public void dequeueMemberByFront(String requestId) throws Throwable {
+        Helper.getMockServer().when(
+                request().withMethod("POST").withPath(this.memR.getPath() + "/Front").withBody(new JsonBody("{requestId:'"+ requestId + "'}"))
+        ).respond(
+                response().withStatusCode(200).withBody(MembersRequesterTest.testMember)
+        );
+
+        Member m = this.memR.dequeueFront(requestId);
         Member orig = Member.fromJson(MembersRequesterTest.testMember);
         assertTrue(m.equals(orig));
     }

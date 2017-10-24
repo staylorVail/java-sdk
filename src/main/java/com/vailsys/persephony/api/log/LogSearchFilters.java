@@ -1,9 +1,11 @@
 package com.vailsys.persephony.api.log;
 
+import com.vailsys.persephony.api.CommonFields;
+
 /**
  * Represents the possible fields one can set as filters when searching for logs.
  */
-public class LogSearchFilters {
+public class LogSearchFilters extends CommonFields {
     /**
      * The persephony query language query. This represents a Lucene-like query that will filter the list of logs.
      */

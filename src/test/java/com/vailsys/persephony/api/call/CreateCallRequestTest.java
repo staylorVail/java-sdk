@@ -97,9 +97,7 @@ public class CreateCallRequestTest {
 		assertThat(this.request.applicationId, is(this.applicationId));
 		assertThat(this.request.callConnectUrl, is(this.callConnectUrl));
 		assertThat(this.request.statusCallbackUrl, is(this.statusCallbackUrl));
-		assertThat(this.request.sendDigits, is(this.sendDigits));
-		assertThat(this.request.ifMachine, is(this.ifMachine));
-		assertThat(this.request.timeout, is(this.timeout));
+		assertThat(this.request.options, is(this.options));
 	}
 
 	@Then("^check that it can produce JSON from the applicationId based object.$")
@@ -110,7 +108,7 @@ public class CreateCallRequestTest {
 
 	@Then("^check that it can produce JSON from the url based object with options.$")
 	public void checkJsonUrlWithOptions() {
-		String json = "{\"to\":\""+this.request.to+"\",\"from\":\""+this.request.from+"\",\"callConnectUrl\":\""+this.request.callConnectUrl+"\",\"statusCallbackUrl\":\""+this.request.statusCallbackUrl+"\",\"sendDigits\":\""+this.request.sendDigits+"\",\"ifMachine\":\"hangup\",\"timeout\":"+this.request.timeout+"}";
+		String json = "{\"to\":\""+this.request.to+"\",\"from\":\""+this.request.from+"\",\"callConnectUrl\":\""+this.request.callConnectUrl+"\",\"statusCallbackUrl\":\""+this.request.statusCallbackUrl+"\",\"sendDigits\":\""+this.sendDigits+"\",\"ifMachine\":\"hangup\",\"timeout\":"+this.timeout+"}";
 		assertThat(this.request.toJson(), is(json));
 	}
 

@@ -16,6 +16,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import org.mockserver.model.JsonBody;
 import org.mockserver.verify.VerificationTimes;
 import world.Helper;
 
@@ -97,7 +98,7 @@ public class CallsRequesterTest {
 		CallOptions options = new CallOptions();
 		options.setTimeout(timeout);
 
-		CreateCallRequest query = new CreateCallRequest(from, to, callConnectUrl, (String)null, options);
+		CreateCallRequest query = new CreateCallRequest(to, from, callConnectUrl, (String)null, options);
 
 		Helper.getMockServer().when(
 			request().withMethod("POST").withPath(this.callsR.getPath()).withBody(query.toJson())
@@ -105,7 +106,32 @@ public class CallsRequesterTest {
 			response().withStatusCode(200).withBody(CallsRequesterTest.aTestCall)
 		);
 
-		assertTrue(this.callsR.create(from, to, callConnectUrl, (String)null, options).equals(Call.fromJson(CallsRequesterTest.aTestCall)));
+		assertTrue(this.callsR.create(to, from, callConnectUrl, (String)null, options).equals(Call.fromJson(CallsRequesterTest.aTestCall)));
+	}
+
+	@Then("^place a call from (\\+?[1-9]\\d{1,14}) to (\\+?[1-9]\\d{1,14}) using callConnectUrl with requestId (.*)")
+	public void placeCallConnectUrlCallWithRequestId(String from, String to, String requestId) throws Throwable {
+		String callConnectUrl = "http://vailsys.com/callConnect";
+
+		CallOptions options = new CallOptions();
+		options.setTimeout(10);
+		options.setRequestId(requestId);
+
+		CreateCallRequest query = new CreateCallRequest(to, from, callConnectUrl, (String)null, options);
+
+
+		Helper.getMockServer().when(
+				request().withMethod("POST").withPath(this.callsR.getPath()).withBody(query.toJson())
+		).respond(
+				response().withStatusCode(200).withBody(CallsRequesterTest.aTestCall)
+		);
+
+		this.callsR.create(to, from, callConnectUrl, (String)null, options);
+
+		Helper.getMockServer().verify(
+				request().withMethod("POST").withPath(this.callsR.getPath()).withBody(new JsonBody("{from:'" + from + "',to:'" + to + "', callConnectUrl:'" + callConnectUrl + "',timeout:10,requestId:'" +requestId + "'}")),
+				VerificationTimes.exactly(1)
+		);
 	}
 
 	@Then("^place a call from (\\+?[1-9]\\d{1,14}) to (\\+?[1-9]\\d{1,14}) using callConnectUrl and statusCallbackUrl$")
@@ -217,6 +243,31 @@ public class CallsRequesterTest {
 				request().withMethod("POST")
 						.withPath(this.callsR.getPath()+"/"+callId)
 						.withBody(gson.toJson(updates)),
+				VerificationTimes.exactly(1)
+		);
+	}
+
+	@Then("^update a call with id (.*) to status (canceled|completed) with requestId (.*)$")
+	public void updateCall(String callId, String status, String requestId) throws Throwable {
+		CallsUpdateOptions updates = new CallsUpdateOptions();
+		updates.setRequestId(requestId);
+		if(status.equals("canceled")) {
+			updates.setStatus(CallStatus.CANCELED);
+		} else {
+			updates.setStatus(CallStatus.COMPLETED);
+		}
+
+		Helper.getMockServer().when(
+				request().withMethod("POST").withPath(this.callsR.getPath() + "/" + callId).withBody(new JsonBody("{status:'" + status + "', requestId:'" + requestId + "'}"))
+		).respond(
+				response().withStatusCode(200).withBody(CallsRequesterTest.aTestCall)
+		);
+
+		this.callsR.update(callId, updates);
+
+		Helper.getMockServer().verify(
+				request().withMethod("POST").withPath(this.callsR.getPath() + "/" + callId)
+				.withBody(new JsonBody("{status:'"+ status + "', requestId:'" + requestId + "'}")),
 				VerificationTimes.exactly(1)
 		);
 	}

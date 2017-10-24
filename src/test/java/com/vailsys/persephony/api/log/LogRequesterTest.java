@@ -4,6 +4,8 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
+import org.mockserver.model.JsonBody;
+import org.mockserver.verify.VerificationTimes;
 import world.Helper;
 
 import java.util.ArrayList;
@@ -72,5 +74,29 @@ public class LogRequesterTest {
         assertThat(ll.getLocalSize(), is(orig.getLocalSize()));
         assertThat(ll.getTotalSize(), is(orig.getTotalSize()));
         assertTrue(ll.get(0).equals(orig.get(0)));
+    }
+
+    @Then("^list logs with a query and requestId (.*)$")
+    public void getFilteredList(String requestId) throws Throwable {
+        LogSearchFilters filters = new LogSearchFilters();
+        filters.setPql("level=\"info\"");
+        filters.setRequestId(requestId);
+
+        Helper.getMockServer().when(
+                request().withMethod("POST").withPath(requester.getPath()).withBody(gson.toJson(filters))
+        ).respond(
+                response().withStatusCode(200).withBody(listJson)
+        );
+
+        LogList ll = requester.get(filters);
+        LogList orig = new LogList("ACCOUNTID", "AUTHTOKEN", listJson);
+
+        assertThat(ll.getLocalSize(), is(orig.getLocalSize()));
+        assertThat(ll.getTotalSize(), is(orig.getTotalSize()));
+        assertTrue(ll.get(0).equals(orig.get(0)));
+
+        Helper.getMockServer().verify(
+                request().withMethod("POST").withPath(requester.getPath()).withBody(new JsonBody("{pql:'" + filters.getPql() + "',requestId:'" + requestId + "'}")), VerificationTimes.exactly(1)
+        );
     }
 }
