@@ -73,7 +73,7 @@ public class CallOptions extends CommonFields {
 	/**
 	 * Sets the parentCallId field.
 	 *
-	 * @param parentCallId Value to which to set timeout.
+	 * @param parentCallId Value to which to set parentCallId.
 	 */
 	public void setParentCallId(String parentCallId){
 		this.parentCallId = parentCallId;
