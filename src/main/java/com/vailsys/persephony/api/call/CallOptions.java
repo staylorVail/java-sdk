@@ -27,6 +27,10 @@ public class CallOptions extends CommonFields {
 	 * hanging up the call. 
 	 */
 	private Integer timeout;
+	/**
+	 * The callId of the call that created this call (if one exists).
+	 */
+	private String parentCallId;
 
 	/**
 	 * Create an empty {@code CallOptions} object. Set only values that are
@@ -36,6 +40,7 @@ public class CallOptions extends CommonFields {
 		sendDigits = null;
 		ifMachine = null;
 		timeout = null;
+		parentCallId = null;
 	}
 
 	/**
@@ -66,6 +71,15 @@ public class CallOptions extends CommonFields {
 	}
 
 	/**
+	 * Sets the parentCallId field.
+	 *
+	 * @param parentCallId Value to which to set timeout.
+	 */
+	public void setParentCallId(String parentCallId){
+		this.parentCallId = parentCallId;
+	}
+
+	/**
 	 * Retrieve the sendDigits value.
 	 * 
 	 * @return The sendDigits value of the object.
@@ -92,6 +106,15 @@ public class CallOptions extends CommonFields {
 	 */
 	public Integer getTimeout() {
 		return this.timeout;
+	}
+
+	/**
+	 * Retrieve the parentCallId value.
+	 *
+	 * @return The parentCallId value of the object.
+	 */
+	public String getParentCallId() {
+		return this.parentCallId;
 	}
 	
 }

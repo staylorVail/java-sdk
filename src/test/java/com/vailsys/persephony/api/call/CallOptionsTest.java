@@ -37,24 +37,31 @@ public class CallOptionsTest {
 		assertThat(this.options.getTimeout(), nullValue());
 	}
 
-	@Then("^check that setSendDigits\\(\\) and getSendDigits\\(\\) are setting and retireving the correct value.$")
+	@Then("^check that setSendDigits\\(\\) and getSendDigits\\(\\) are setting and retrieving the correct value.$")
 	public void checkSetGetSendDigits() {
 		String digits = "2764*";
 		this.options.setSendDigits(digits);
 		assertThat(this.options.getSendDigits(), is(digits));
 	}
 
-	@Then("^check that setIfMachine\\(\\) and getIfMachine\\(\\) are setting and retireving the correct value.$")
+	@Then("^check that setIfMachine\\(\\) and getIfMachine\\(\\) are setting and retrieving the correct value.$")
 	public void checkSetGetIfMachine() {
 		IfMachine ifMachine = IfMachine.CONTINUE;
 		this.options.setIfMachine(ifMachine);
 		assertThat(this.options.getIfMachine(), is(ifMachine));
 	}
 
-	@Then("^check that setTimeout\\(\\) and getTimeout\\(\\) are setting and retireving the correct value.$")
+	@Then("^check that setTimeout\\(\\) and getTimeout\\(\\) are setting and retrieving the correct value.$")
 	public void checkSetGetTimeout() {
 		Integer timeout = 30;
 		this.options.setTimeout(timeout);
 		assertThat(this.options.getTimeout(), is(timeout));
+	}
+
+	@Then("^check that setParentCallId\\(\\) and getParentCallId\\(\\) are setting and retrieving the correct value.$")
+	public void checkSetGetParentCallId() {
+		String parentCallId = "CA0000000000000000000000000000000000000000";
+		this.options.setParentCallId(parentCallId);
+		assertThat(this.options.getParentCallId(), is(parentCallId));
 	}
 }
