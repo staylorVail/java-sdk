@@ -1,6 +1,6 @@
 package com.vailsys.persephony.webhooks.call;
 
-import com.vailsys.persephony.webhooks.StatusCallback;
+import com.vailsys.persephony.webhooks.PersyRequest;
 import com.vailsys.persephony.api.PersyJSONException;
 import com.vailsys.persephony.api.PersyException;
 import com.vailsys.persephony.api.call.CallStatus;
@@ -9,17 +9,16 @@ import static com.vailsys.persephony.json.PersyGson.gson;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.annotations.SerializedName;
 
-public class CallStatusCallback extends StatusCallback {
+public class VoiceCallback extends PersyRequest {
 	private CallStatus dialCallStatus;
 	private AnsweredBy answeredBy;
 
-	private CallStatusCallback(){}
+	private VoiceCallback(){}
 
-	public static CallStatusCallback createFromJson(String jsonString) throws PersyException {
+	public static VoiceCallback createFromJson(String jsonString) throws PersyException {
 		try {
-			return gson.fromJson(jsonString, CallStatusCallback.class);
+			return gson.fromJson(jsonString, VoiceCallback.class);
 		}
 		catch(JsonIOException jioe) {
 			throw new PersyJSONException(jioe);
