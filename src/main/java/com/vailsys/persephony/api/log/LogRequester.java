@@ -2,6 +2,7 @@ package com.vailsys.persephony.api.log;
 
 import com.vailsys.persephony.api.APIAccountRequester;
 import com.vailsys.persephony.api.PersyException;
+import com.vailsys.persephony.log.LogWriter;
 
 import static com.vailsys.persephony.json.PersyGson.gson;
 
@@ -15,6 +16,22 @@ public class LogRequester extends APIAccountRequester {
     private final String path;
     /** The accountId for the acting account. */
     private final String actingAccountId;
+
+    /**
+     * Creates a LogRequester with custom logging settings. For most SDK users LogRequesters will be
+     * created automatically by the {@link com.vailsys.persephony.api.PersyClient}
+     * but is available for more advanced users who only require the features in this specific requester and not the rest of the features of the {@link com.vailsys.persephony.api.PersyClient}
+     *
+     * @param credAccountId The accountId to use as authentication credentials in the HTTP Basic Auth header for requests made by this requester.
+     * @param credAuthToken The authToken to use as authentication credentials in the HTTP Basic Auth header for requests made by this requester.
+     * @param actingAccountId The accountId to act as. This can be the same as {@code credAccountId} or the accountId of a subaccount of the {@code credAccountId}
+     * @param writer The log writer to use.
+     */
+    public LogRequester(String credAccountId, String credAuthToken, String actingAccountId, LogWriter writer) throws PersyException {
+        super(credAccountId, credAuthToken, writer);
+        this.actingAccountId = actingAccountId;
+        this.path = APIAccountRequester.constructPath(APIAccountRequester.rootPath, this.actingAccountId, this.pathHead);
+    }
 
     /**
      * Creates a LogRequester. For most SDK users LogRequesters will be
