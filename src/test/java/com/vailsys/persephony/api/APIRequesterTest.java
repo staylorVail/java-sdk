@@ -1,30 +1,38 @@
 package com.vailsys.persephony.api;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import com.vailsys.persephony.log.*;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 import com.vailsys.persephony.KnownSizeInputStream;
+import cucumber.api.java.en.When;
+import org.mockito.invocation.Invocation;
 import world.Helper;
 
 public class APIRequesterTest {
 
 	private APIRequester req;
+	private LogWriter writer;
+
+	public APIRequesterTest() {
+		writer = spy(new TestLogWriter());
+	}
+
 
 	@Given("^an accountId of (AC[0-9A-Fa-f]{40}) and an authToken of ([0-9A-Fa-f]{40}) to make a default APIRequester$")
 	public void makeADefaultAPIRequester(String accountId, String authToken) throws Throwable {
@@ -34,7 +42,7 @@ public class APIRequesterTest {
 
 	@Given("^an accountId of (AC[0-9A-Fa-f]{40}) and an authToken of ([0-9A-Fa-f]{40}) to make a test APIRequester$")
 	public void makeAnAPIRequester(String accountId, String authToken) throws Throwable {
-		this.req = new APIRequester(accountId, authToken);
+		this.req = new APIRequester(accountId, authToken, writer);
 		this.req.setPersyUrl("http://127.0.0.1:"+ Helper.getServerPort());
 	}
 
@@ -281,5 +289,45 @@ public class APIRequesterTest {
 			assertThat(pere, notNullValue());
 			assertThat(pere.getError(), notNullValue());
 		}
+	}
+
+	@When("^the log writer is set to a BasicLogWriter$")
+	public void setBasicLogWriter() {
+		writer = spy(new BasicLogWriter());
+		req.setLogWriter(writer);
+	}
+
+	@When("^the logging level is set to (.*)$")
+	public void setLoggerLevel(String levelString) {
+		Level level = Level.valueOf(levelString);
+
+		req.setLoggerLevel(level);
+	}
+
+	@When("^the logging settings are reset$")
+	public void resetLoggerToDefaults() {
+		req.resetLoggerToDefaults();
+	}
+
+	@Then("^the LogWriter stored in the Logger should be a BasicLogWriter$")
+	public void assertBasicLogWriter() {
+		assertThat(Logger.getLogWriter(), instanceOf(BasicLogWriter.class));
+	}
+
+	@Then("^the LogWriter stored in the Logger should be a NopLogWriter$")
+	public void assertNopLogWriter() {
+		assertThat(Logger.getLogWriter(), instanceOf(NopLogWriter.class));
+	}
+
+	@Then("^the LogWriter stored in the Logger should be a TestLogWriter$")
+	public void assertTestLogWriterl() {
+		assertThat(Logger.getLogWriter(), instanceOf(TestLogWriter.class));
+	}
+
+	@Then("^the LogWriter stored in the Logger should have the log level set to (.*)$")
+	public void assertLoggerLevel(String levelString) throws Exception {
+		Level level = Level.valueOf(levelString);
+
+		verify(writer, times(1)).setLevel(level);
 	}
 }

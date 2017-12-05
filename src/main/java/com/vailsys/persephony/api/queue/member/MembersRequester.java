@@ -4,6 +4,7 @@ import com.google.gson.JsonIOException;
 import com.vailsys.persephony.api.APIAccountRequester;
 import com.vailsys.persephony.api.PersyException;
 import com.vailsys.persephony.api.PersyJSONException;
+import com.vailsys.persephony.log.LogWriter;
 
 /**
  * This class represents the set of wrappers around the Persephony Members API.
@@ -15,6 +16,24 @@ public class MembersRequester extends APIAccountRequester {
     private final String path;
     /** The accountId for the acting account. */
     private final String actingAccountId;
+
+    /**
+     * Creates a MembersRequester with custom logging options. For most SDK users MembersRequesters will be created automatically by the {@link com.vailsys.persephony.api.PersyClient} but is available for more advanced users who only require the features in this specific requester and not the rest of the features of the {@link com.vailsys.persephony.api.PersyClient}.
+     *
+     * @param credAccountId The accountId to use as authentication credentials
+     * in the HTTP Basic Auth header for requests made by this requester.
+     * @param credAuthToken The authToken to use as authentication credentials
+     * in the HTTP Basic Auth header for requests made by this requester.
+     * @param actingAccountId The accountId to act as. This can be the same as
+     * the {@code credAccountId} or the accountId of a subaccount of the {@code credAccountId}.
+     * @param queuePath The path for the queue endpoint this MembersRequester is under.
+     * @param writer The log writer to use.
+     */
+    public MembersRequester(String credAccountId, String credAuthToken, String actingAccountId, String queuePath, LogWriter writer){
+        super(credAccountId, credAuthToken, writer);
+        this.actingAccountId = actingAccountId;
+        this.path = APIAccountRequester.constructPath(queuePath, pathHead);
+    }
 
     /**
      * Creates a MembersRequester. For most SDK users MembersRequesters will be created automatically by the {@link com.vailsys.persephony.api.PersyClient} but is available for more advanced users who only require the features in this specific requester and not the rest of the features of the {@link com.vailsys.persephony.api.PersyClient}.

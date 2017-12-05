@@ -16,7 +16,7 @@ public class LoggerTest {
     @When("^the Logger logs an entry it should call the writer's write method with the entry$")
     public void checklog(){
         BasicLogWriter writer = mock(BasicLogWriter.class);
-        Logger.setWriter(writer);
+        Logger.setLogWriter(writer);
         Entry entry = mock(Entry.class);
 
         Logger.log(entry);
@@ -28,7 +28,7 @@ public class LoggerTest {
     public void checkLogFromComponents(){
         ArgumentCaptor<Entry> captor = ArgumentCaptor.forClass(Entry.class);
         BasicLogWriter writer = mock(BasicLogWriter.class);
-        Logger.setWriter(writer);
+        Logger.setLogWriter(writer);
         Level level = Level.INFO;
         String message = "message";
         HashMap<String, Object> metadata = new HashMap<>();
@@ -48,7 +48,7 @@ public class LoggerTest {
     public void checkLevel(String level){
         ArgumentCaptor<Entry> captor = ArgumentCaptor.forClass(Entry.class);
         BasicLogWriter writer = mock(BasicLogWriter.class);
-        Logger.setWriter(writer);
+        Logger.setLogWriter(writer);
         String message = "message";
         HashMap<String, Object> metadata = new HashMap<>();
         StackTraceElement[] trace = new StackTraceElement[0];

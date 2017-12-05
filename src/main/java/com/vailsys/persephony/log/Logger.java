@@ -3,17 +3,11 @@ package com.vailsys.persephony.log;
 import java.util.HashMap;
 
 public class Logger {
-    private static Level level = Level.ERROR;
     private static LogWriter w = new NopLogWriter();
 
-    public static void setLevel(Level l){
-        level = l;
-    }
+    public static void setLogWriter(LogWriter writer) { w = writer; }
 
-    public static void setWriter(LogWriter writer){
-        w = writer;
-    }
-
+    public static LogWriter getLogWriter() { return w; }
 
     public static void log(Entry e){
         w.write(e);
