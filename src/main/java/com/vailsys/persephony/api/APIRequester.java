@@ -30,7 +30,7 @@ import com.vailsys.persephony.log.Logger;
 import com.vailsys.persephony.log.NopLogWriter;
 
 /**
- *	The APIRequester is the base class for various *Requestor classes which
+ *	The APIRequester is the base class for various *Requester classes which
  *	each wrap a portion of the Persephony API. This class abstracts away the
  *	messiness that can be directly interacting with the API over HTTP to reduce
  *	code duplication in these child Requesters and ease their development.
@@ -52,7 +52,7 @@ public class APIRequester {
 	private String persyUrl;
 
 	/**
-	 * Create a new APIRequestor with custom logging settings.
+	 * Create a new APIRequester with custom logging settings.
 	 *
 	 * @param credAccountId The accountId to use to authenticate requests.
 	 * @param credAuthToken The authToken to use to authenticate requests.
@@ -391,7 +391,7 @@ public class APIRequester {
 	}
 
 	/**
-	 *	Set the LogWriter used for logging.
+	 *	Sets the LogWriter used for logging.
 	 *
 	 *	@param writer The log writer to use.
 	 */
@@ -400,7 +400,7 @@ public class APIRequester {
 	}
 
 	/**
-	 *	Set the log level for logging.
+	 *	Sets the log level for logging.
 	 *
 	 *	@param level The log level to use.
 	 */
@@ -409,7 +409,7 @@ public class APIRequester {
 	}
 
 	/**
-	 *	Reset the log writer and level to their default values.
+	 *	Resets the log writer to a NopLogWriter.
 	 */
 	public void resetLoggerToDefaults() {
 		this.setLogWriter(new NopLogWriter());
