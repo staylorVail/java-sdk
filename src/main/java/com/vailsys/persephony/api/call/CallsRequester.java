@@ -9,7 +9,6 @@ import static com.vailsys.persephony.json.PersyGson.gson;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import com.vailsys.persephony.log.LogWriter;
 
 /**
  * This class represents the set of wrappers around the Persephony Calls API.
@@ -22,27 +21,6 @@ public class CallsRequester extends APIAccountRequester {
 	private final String path;
 	/** The accountId for the acting account. */
 	private final String actingAccountId;
-
-	/**
-	 * Creates a CallsRequester with custom logging settings. For most SDK users CallsRequesters will be
-	 * created automatically by the {@link com.vailsys.persephony.api.PersyClient}
-	 * but is available for more advanced users who only require the features
-	 * in this specific requester and not the rest of the features of the
-	 * {@link com.vailsys.persephony.api.PersyClient}.
-	 *
-	 * @param credAccountId The accountId to use as authentication credentials
-	 * in the HTTP Basic Auth header for requests made by this requester.
-	 * @param credAuthToken The authToken to use as authentication credentials
-	 * in the HTTP Basic Auth header for requests made by this requester.
-	 * @param actingAccountId The accountId to act as. This can be the same as
-	 * the {@code credAccountId} or the accountId of a subaccount of the {@code credAccountId}.
-	 * @param writer The log writer to use.
-	 */
-	public CallsRequester(String credAccountId, String credAuthToken, String actingAccountId, LogWriter writer) throws PersyException {
-		super(credAccountId, credAuthToken, writer);
-		this.actingAccountId = actingAccountId;
-		this.path = APIAccountRequester.constructPath(APIAccountRequester.rootPath, this.actingAccountId, pathHead);
-	}
 
 	/**
 	 * Creates a CallsRequester. For most SDK users CallsRequesters will be

@@ -5,8 +5,6 @@ import com.vailsys.persephony.api.APIAccountRequester;
 import com.vailsys.persephony.api.PersyException;
 import com.vailsys.persephony.api.PersyJSONException;
 import com.vailsys.persephony.api.queue.member.MembersRequester;
-import com.vailsys.persephony.log.Level;
-import com.vailsys.persephony.log.LogWriter;
 
 import java.util.HashMap;
 
@@ -22,23 +20,6 @@ public class QueuesRequester extends APIAccountRequester {
     private final String path;
     /** The accountId for the acting account. */
     private final String actingAccountId;
-
-    /**
-     * Creates a QueuesRequester with custom logging settings. For most SDK users QueuesRequesters will be created automatically by the {@link com.vailsys.persephony.api.PersyClient} but is available for more advanced users who only require the features in this specific requester and not the rest of the features of the {@link com.vailsys.persephony.api.PersyClient}.
-     *
-     * @param credAccountId The accountId to use as authentication credentials
-     * in the HTTP Basic Auth header for requests made by this requester.
-     * @param credAuthToken The authToken to use as authentication credentials
-     * in the HTTP Basic Auth header for requests made by this requester.
-     * @param actingAccountId The accountId to act as. This can be the same as
-     * {@code credAccountId} or the accountId of a subaccount of the {@code credAccountId}.
-     * @param writer The log writer to use.
-     */
-    public QueuesRequester(String credAccountId, String credAuthToken, String actingAccountId, LogWriter writer) throws PersyException {
-        super(credAccountId, credAuthToken, writer);
-        this.actingAccountId = actingAccountId;
-        this.path = APIAccountRequester.constructPath(APIAccountRequester.rootPath, this.actingAccountId, pathHead);
-    }
 
     /**
      * Creates a QueuesRequester. For most SDK users QueuesRequesters will be created automatically by the {@link com.vailsys.persephony.api.PersyClient} but is available for more advanced users who only require the features in this specific requester and not the rest of the features of the {@link com.vailsys.persephony.api.PersyClient}.
@@ -174,18 +155,6 @@ public class QueuesRequester extends APIAccountRequester {
      */
     public Queue create(QueueCreateOptions options) throws PersyException {
         return Queue.fromJson(this.POST(this.getPath(), gson.toJson(options)));
-    }
-
-    /**
-     * Creates a {@link com.vailsys.persephony.api.queue.member.MembersRequester} bound to a specific queue with custom logging options.
-     *
-     * @param queueId The {@code queueId} to bind the MembersRequester to.
-     * @param writer The log writer to use.
-     *
-     * @return The {@code MembersRequester} that was created.
-     */
-    public MembersRequester getMembersRequester(String queueId, LogWriter writer) throws PersyException {
-        return new MembersRequester(super.getCredentialAccountId(), super.getCredentialAuthToken(), this.getActingAccountId(), this.getQueuePath(queueId), writer);
     }
 
     /**

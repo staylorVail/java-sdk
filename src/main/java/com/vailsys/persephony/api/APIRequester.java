@@ -24,10 +24,6 @@ import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import com.google.gson.reflect.TypeToken;
 
 import com.vailsys.persephony.KnownSizeInputStream;
-import com.vailsys.persephony.log.Level;
-import com.vailsys.persephony.log.LogWriter;
-import com.vailsys.persephony.log.Logger;
-import com.vailsys.persephony.log.NopLogWriter;
 
 /**
  *	The APIRequester is the base class for various *Requester classes which
@@ -52,28 +48,16 @@ public class APIRequester {
 	private String persyUrl;
 
 	/**
-	 * Create a new APIRequester with custom logging settings.
-	 *
-	 * @param credAccountId The accountId to use to authenticate requests.
-	 * @param credAuthToken The authToken to use to authenticate requests.
-	 * @param writer The log writer to use.
-	 */
-	protected APIRequester(String credAccountId, String credAuthToken, LogWriter writer) {
-		this.credAccountId = credAccountId;
-		this.credAuthToken = credAuthToken;
-		this.encodedAuth = printBase64Binary((credAccountId+":"+credAuthToken).getBytes(StandardCharsets.UTF_8));
-		this.persyUrl = APIRequester.PERSY_URL;
-		Logger.setLogWriter(writer);
-	}
-
-	/**
 	 *	Create a new APIRequester.
 	 *
 	 *	@param credAccountId The accountId to use to authenticate requests.
 	 *	@param credAuthToken The authToken to use to authenticate requests.
 	 */
 	protected APIRequester(String credAccountId, String credAuthToken) {
-		this(credAccountId, credAuthToken, new NopLogWriter());
+		this.credAccountId = credAccountId;
+		this.credAuthToken = credAuthToken;
+		this.encodedAuth = printBase64Binary((credAccountId+":"+credAuthToken).getBytes(StandardCharsets.UTF_8));
+		this.persyUrl = APIRequester.PERSY_URL;
 	}
 
 	/** @return the accountId being used for authentication */
@@ -160,11 +144,6 @@ public class APIRequester {
 		HttpURLConnection con = establishConnection("GET", path);
 		String resp = readResponse(con);
 
-		HashMap<String, Object> metadata = new HashMap<>();
-		metadata.put("Method", "GET");
-		metadata.put("Response", resp);
-		metadata.put("Url", path);
-		Logger.info("GET Request:", metadata, null);
 		return resp;
 	}
 	
@@ -228,12 +207,6 @@ public class APIRequester {
 			throw new PersyConnectionException("Could not send request to Persephony API: "+ioe.getMessage(), ioe);
 		}
 
-		HashMap<String, Object> metadata = new HashMap<>();
-		metadata.put("Method", "POST");
-		metadata.put("Response", resp);
-		metadata.put("Url", path);
-		metadata.put("RequestBody", payload);
-		Logger.info("POST Request:", metadata, null);
 		return resp;
 	}
 
@@ -245,13 +218,6 @@ public class APIRequester {
 	protected void DELETE(String path) throws PersyException {
 		HttpURLConnection con = establishConnection("DELETE", path);
 		String resp = readResponse(con);
-
-		HashMap<String, Object> metadata = new HashMap<>();
-		metadata.put("Method", "DELETE");
-		metadata.put("Response", resp);
-		metadata.put("Url", path);
-		Logger.info("DELETE Request:", metadata, null);
-
 	}
 
 	/**
@@ -388,30 +354,5 @@ public class APIRequester {
 			throw new PersyConnectionException("Could not retrieve InputStream from the HttpURLConnection: " + e.getMessage(), e);
 		}
 		return is;
-	}
-
-	/**
-	 *	Sets the LogWriter used for logging.
-	 *
-	 *	@param writer The log writer to use.
-	 */
-	public void setLogWriter(LogWriter writer) {
-		Logger.setLogWriter(writer);
-	}
-
-	/**
-	 *	Sets the log level for logging.
-	 *
-	 *	@param level The log level to use.
-	 */
-	public void setLoggerLevel(Level level) {
-		Logger.getLogWriter().setLevel(level);
-	}
-
-	/**
-	 *	Resets the log writer to a NopLogWriter.
-	 */
-	public void resetLoggerToDefaults() {
-		this.setLogWriter(new NopLogWriter());
 	}
 }

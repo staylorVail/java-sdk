@@ -2,7 +2,6 @@ package com.vailsys.persephony.api.recording;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Date;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,15 +11,11 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import com.vailsys.persephony.KnownSizeInputStream;
 import com.vailsys.persephony.api.APIAccountRequester;
 import com.vailsys.persephony.api.PersyException;
-import com.vailsys.persephony.api.PersySDKException;
 import com.vailsys.persephony.api.PersyJSONException;
-import com.vailsys.persephony.api.PersyJSONException;
+
 import static com.vailsys.persephony.json.PersyGson.gson;
 
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import com.vailsys.persephony.log.Level;
-import com.vailsys.persephony.log.LogWriter;
 
 public class RecordingsRequester extends APIAccountRequester {
 	private static final String pathHead = "Recordings";
@@ -28,12 +23,6 @@ public class RecordingsRequester extends APIAccountRequester {
 	private static final String streamSuffix = "Stream";
 	private final String path;
 	private final String actingAccountId;
-
-	public RecordingsRequester(String credAccountId, String credAuthToken, String actingAccountId, LogWriter writer) throws PersyException {
-		super(credAccountId, credAuthToken, writer);
-		this.actingAccountId = actingAccountId;
-		this.path = APIAccountRequester.constructPath(APIAccountRequester.rootPath,this.actingAccountId, pathHead);
-	}
 
 	public RecordingsRequester(String credAccountId, String credAuthToken, String actingAccountId) throws PersyException {
 		super(credAccountId, credAuthToken); 

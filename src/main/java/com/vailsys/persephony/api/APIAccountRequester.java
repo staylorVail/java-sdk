@@ -1,9 +1,5 @@
 package com.vailsys.persephony.api;
 
-
-import com.vailsys.persephony.log.Level;
-import com.vailsys.persephony.log.LogWriter;
-
 /**
  *	The APIAccountRequester is the base class for various *Requester classes which
  *	each wrap a portion of the Persephony API. This class abstracts away the
@@ -17,9 +13,5 @@ public class APIAccountRequester extends APIRequester {
 
     protected APIAccountRequester(String credAccountId, String credAuthToken){
         super(credAccountId, credAuthToken);
-    }
-
-    protected APIAccountRequester(String credAccountId, String credAuthToken, LogWriter writer){
-        super(credAccountId, credAuthToken, writer);
     }
 }
